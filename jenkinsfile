@@ -8,7 +8,7 @@ pipeline {
   }
  stage('Clean') {
    steps {
-    dir("/var/lib/jenkins/workspace/ASPproject/samples/aspnetapp/aspnetapp/")
+    dir("/var/lib/jenkins/workspace/asp-project")
     {
      sh 'sudo dotnet clean'
    }
@@ -16,7 +16,7 @@ pipeline {
   }
    stage('Build') {
    steps {
-    dir("/var/lib/jenkins/workspace/ASPproject/samples/aspnetapp/aspnetapp/")
+    dir("/var/lib/jenkins/workspace/asp-project")
     {
      sh 'sudo dotnet publish -c Release -o published'
     }
@@ -24,7 +24,7 @@ pipeline {
   }
    stage('Deploy in QA environment') {
    steps {
-    dir("/var/lib/jenkins/workspace/ASPproject/samples/aspnetapp/aspnetapp/")
+    dir("/var/lib/jenkins/workspace/asp-project")
     {
      sh 'sudo docker build -t aspnetapp .'
      sh 'sudo docker run -d -p 8081:80 --name aspnetcore_container aspnetapp'
