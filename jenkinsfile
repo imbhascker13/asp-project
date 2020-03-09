@@ -1,0 +1,35 @@
+pipeline {
+ agent any
+ stages {
+  stage('Checkout') {
+   steps {
+    git 'https://github.com/dotnet/dotnet-docker'
+   }
+  }
+ stage('Clean') {
+   steps {
+    dir("/var/lib/jenkins/workspace/ASPproject/samples/aspnetapp/aspnetapp/")
+    {
+     sh 'sudo dotnet clean'
+   }
+   }
+  }
+   stage('Build') {
+   steps {
+    dir("/var/lib/jenkins/workspace/ASPproject/samples/aspnetapp/aspnetapp/")
+    {
+     sh 'sudo dotnet publish -c Release -o published'
+    }
+   }
+  }
+   stage('Deploy in QA environment') {
+   steps {
+    dir("/var/lib/jenkins/workspace/ASPproject/samples/aspnetapp/aspnetapp/")
+    {
+     sh 'sudo docker build -t aspnetapp .'
+     sh 'sudo docker run -d -p 8081:80 --name aspnetcore_container aspnetapp'
+    }
+   }
+  }
+ }
+}
